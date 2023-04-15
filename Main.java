@@ -79,11 +79,11 @@ class Bank extends BankAccount {
 
     public BankAccount createNewAccount(String accountType, String currency) {
 
-        if (accountType.equalsIgnoreCase("debit_account")) {
+        if (accountType.equals("debit_account")) {
             System.out.println("Ваш дебетовый счет создан");
-            DebitAccount debit = new DebitAccount(0, currency, );
+            DebitAccount debit = new DebitAccount(0, currency);
             return debit;
-        } else if (accountType.equalsIgnoreCase("credit_account")) {
+        } else if (accountType.equals("credit_account")) {
             int limit = creditLimit(currency);
             CreditAccount credit = new CreditAccount(0, currency, limit);
             System.out.println("Кредитный счет создан. Ваш лимит по счету " + limit + " " + currency);
@@ -95,26 +95,25 @@ class Bank extends BankAccount {
         }
     }
 
-    public void closeAccount(String accountType) {
+    public void closeAccount(BankAccount accountType) {
 
-        if (accountType.equals("debit_account")) {
+        if (accountType instanceof DebitAccount) {
             if (this.amount > 0) {
                 System.out.println("Ваш дебетовый счёт закрыт. Вы можете получить остаток по вашему счёту в размере "
                         + this.amount + " " + this.currency + " в отделении банка");
             } else if (this.amount == 0) {
                 System.out.println("Ваш дебетовый счет закрыт");
             }
-        } else if (accountType.equals("credit_account")) {
+        } else if (accountType instanceof CreditAccount) {
             if (this.amount == 0) {
                 System.out.println("Ваш кредитный счёт закрыт");
             } else if (this.amount > 0) {
                 System.out.println("Ваш кредитный счёт закрыт. Вы можете получить остаток по вашему счёту в размере "
                         + this.amount + " " + this.currency + " в отделении банка");
             } else if (this.amount < 0) {
-                System.out.println("Вы не можете закрыть кредитный счёт, потому что на нём есть задолженность. Задолженность по счёту составляет " + account.amount + " " + account.currency);
+                System.out.println("Вы не можете закрыть кредитный счёт, потому что на нём есть задолженность. Задолженность по счёту составляет " + Math.abs(this.amount) + " " + this.currency);
             }
         } else {
-            BankAccount other = new BankAccount();
             System.out.println("Пока что мы не можем закрыть данный вид счёта");
         }
     }
